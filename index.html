@@ -101,13 +101,35 @@ body{background:radial-gradient(ellipse at 50% -10%,color-mix(in srgb,var(--gree
 
 /* کارت‌ها باید رنگ واقعی خال را در هر دو تم حفظ کنند؛ قرمزها هرگز با تم تیره سیاه نمی‌شوند. */
 .playing-card.redcard{color:#c62828!important}.playing-card.blackcard{color:#171c19!important}.center-cards .playing-card{transition:transform .42s cubic-bezier(.2,.75,.25,1),opacity .42s ease;animation:dealCard .48s cubic-bezier(.2,.75,.25,1) both}.hand .playing-card{transition:transform .28s ease,box-shadow .28s ease}.hand .playing-card:active{transform:translateY(-5px)}
+
+/* Secure account gate */
+.auth-gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at 50% 0%,#1d533c 0%,#0b2118 45%,#06110d 100%);overflow:auto}
+.auth-gate[hidden]{display:none}.auth-card{width:min(100%,440px);padding:30px;border:1px solid #ffffff20;border-radius:26px;background:#10271edb;box-shadow:0 30px 100px #0008;backdrop-filter:blur(18px);color:#f5f0e3}.auth-brand{display:flex;align-items:center;gap:13px;margin-bottom:22px}.auth-mark{width:54px;height:54px;display:grid;place-items:center;border-radius:17px;background:linear-gradient(145deg,#d9b76a,#947332);color:#14251b;font-size:30px;box-shadow:inset 0 1px #fff8}.auth-brand h1{font-size:26px;margin:0}.auth-brand p{margin:4px 0 0;color:#b8c9bc;font-size:13px}.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;background:#071810;border-radius:13px;margin:22px 0}.auth-tabs button{border:0;border-radius:9px;padding:11px;background:transparent;color:#b9c8be;font:inherit;cursor:pointer}.auth-tabs button.active{background:#d8b66b;color:#17251b;font-weight:800}.auth-field{display:block;margin:14px 0}.auth-field span{display:block;margin-bottom:8px;color:#dce5dd;font-size:13px}.auth-field input{box-sizing:border-box;width:100%;border:1px solid #ffffff24;border-radius:12px;padding:13px 14px;background:#071810;color:#fff;font:inherit;outline:none}.auth-field input:focus{border-color:#d8b66b;box-shadow:0 0 0 3px #d8b66b22}.auth-submit{width:100%;border:0;border-radius:12px;padding:14px;margin-top:8px;background:linear-gradient(120deg,#e7cb84,#c5a04c);color:#14251b;font:inherit;font-weight:900;cursor:pointer}.auth-submit:disabled{opacity:.55;cursor:wait}.auth-remember{display:flex;align-items:center;gap:9px;color:#d4ded6;font-size:13px;margin:14px 0}.auth-message{min-height:22px;margin:10px 0;color:#f2d58c;font-size:13px;line-height:1.8}.auth-foot{font-size:11px;color:#92a99a;line-height:1.9;margin-top:18px}.auth-user{font-size:12px;color:#d8bd7a;margin-top:4px}.auth-error{color:#ffaaa5}.auth-note{font-size:12px;color:#b8c9bc;line-height:1.8}
+@media(max-width:480px){.auth-card{padding:22px 18px;border-radius:21px}.auth-brand h1{font-size:23px}}
+
 </style>
 </head>
 <body>
-<div class="shell">
+
+<div class="auth-gate" id="authGate">
+ <section class="auth-card" aria-labelledby="authTitle">
+  <div class="auth-brand"><div class="auth-mark">♠</div><div><h1 id="authTitle">حُکم</h1><p>ورود امن به دورهمی خودت</p><div class="auth-user" id="authSub">با نام کاربری، بدون ایمیل</div></div></div>
+  <div class="auth-tabs"><button type="button" id="loginTab" class="active" onclick="setAuthMode('login')">ورود</button><button type="button" id="signupTab" onclick="setAuthMode('signup')">ساخت حساب</button></div>
+  <form id="authForm" autocomplete="on">
+   <label class="auth-field"><span>نام کاربری</span><input id="authUsername" name="username" autocomplete="username" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}" required placeholder="مثلاً hokm_player" dir="ltr"></label>
+   <label class="auth-field"><span>رمز عبور</span><input id="authPassword" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="72" required placeholder="حداقل ۸ کاراکتر" dir="ltr"></label>
+   <label class="auth-remember"><input id="rememberMe" type="checkbox" checked> من رو به خاطر بسپار</label>
+   <button class="auth-submit" id="authSubmit" type="submit">ورود به بازی</button>
+   <div class="auth-message" id="authMessage" role="status" aria-live="polite"></div>
+  </form>
+  <div class="auth-foot">رمز عبور در مرورگر ذخیره نمی‌شود. گزینه‌ی یادآوری فقط نشست ورود را روی همین دستگاه نگه می‌دارد. نام کاربری فقط شامل حروف انگلیسی، عدد و زیرخط است.</div>
+ </section>
+</div>
+
+<div class="shell" id="appShell" style="visibility:hidden">
   <header class="topbar">
     <div class="brand"><div class="brandmark">♠</div><div><strong>حُکم</strong><small>DOORHAMIE ONLINE</small></div></div>
-    <div class="top-actions"><button class="pill theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" aria-label="تغییر تم">☀️ حالت روشن</button><button class="pill" onclick="showToast('نسخه نمایشی؛ حساب کاربری در نسخه بعدی اضافه می‌شود')">راهنما</button><button class="pill" onclick="showToast('در این نسخه نیازی به ثبت‌نام نیست')">بدون ثبت‌نام</button><div class="avatar">م</div></div>
+    <div class="top-actions"><button class="pill theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" aria-label="تغییر تم">☀️ حالت روشن</button><button class="pill" id="accountButton" type="button" onclick="hokmLogout()">خروج از حساب</button><div class="avatar" id="accountAvatar">ح</div></div>
   </header>
 
   <main class="home-screen" id="home">
@@ -115,7 +137,7 @@ body{background:radial-gradient(ellipse at 50% -10%,color-mix(in srgb,var(--gree
       <div class="hero-copy">
         <div class="eyebrow"><span class="dot"></span> میزت رو بچین، رفقات رو خبر کن</div>
         <h1>یه دست حکم،<br><span>یه عالمه خاطره.</span></h1>
-        <p>دورهمی آنلاین خودت رو بساز؛ دوستات رو دعوت کن یا همین حالا با بازیکن‌های جدید هم‌میز شو. فقط با یه اسم وارد بازی شو.</p>
+        <p>دورهمی خودت رو بساز و با حساب کاربری‌ات وارد شو. لابی آنلاین در این نسخه آماده اتصال است؛ بازی مشترک زنده هنوز باید تکمیل شود.</p>
         <div class="hero-buttons"><button class="primary" onclick="openModal('create')">＋ ساخت روم خصوصی</button><button class="secondary" onclick="matchmake()">⚡ بازی با افراد تصادفی</button></div>
         <div class="mini-stats"><div class="stat"><strong>۴ نفره</strong><span>دو تیم، یک میز</span></div><div class="stat"><strong>۵۲ کارت</strong><span>حکم کلاسیک</span></div><div class="stat"><strong>رایگان</strong><span>بدون نصب</span></div></div>
       </div>
@@ -140,7 +162,7 @@ body{background:radial-gradient(ellipse at 50% -10%,color-mix(in srgb,var(--gree
         <article class="mode-card"><div class="mode-icon">⚡</div><h3>حریف‌های تازه پیدا کن</h3><p>برای یه دست سریع وارد صف شو و با بازیکن‌های جدید هم‌تیمی و رقیب شو.</p><button class="text-button" onclick="matchmake()">پیدا کردن بازی <span>←</span></button></article>
       </div>
     </section>
-    <footer class="footer"><span>© ۲۰۲۶ <b>حُکم</b> · ساخته‌شده برای دورهمی</span><span>نسخه نمونه · بازی چندنفره آنلاین هنوز فعال نیست</span></footer>
+    <footer class="footer"><span>© ۲۰۲۶ <b>حُکم</b> · ساخته‌شده برای دورهمی</span><span>حساب کاربری Supabase · بازی چندنفره زنده در مرحله توسعه</span></footer>
   </main>
 
   <main class="game-screen" id="game">
@@ -183,6 +205,48 @@ body{background:radial-gradient(ellipse at 50% -10%,color-mix(in srgb,var(--gree
 </div>
 <div class="overlay" id="reportOverlay" onclick="if(event.target===this)closeReport()"><div class="modal"><div class="modal-head"><h2>کارنامه این راند</h2><button class="close" onclick="closeReport()">×</button></div><p id="reportSummary">نتیجه و تحلیل عملکرد</p><div id="reportBody"></div><button class="primary" id="reportNext" onclick="closeReport();startNewHand()">رفتن به دست بعدی</button></div></div>
 <div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Public browser configuration only. Fill these values from Supabase Project Settings.
+const HOKM_SUPABASE_URL = 'https://soelmulypjuzxxdrluje.supabase.co';
+const HOKM_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_svz2j6OFAt6PeNdVaOiosA_Wa9im7Kt';
+let hokmSupabase = null, hokmAuthMode = 'login', hokmSession = null;
+function authMessage(text,error=false){const el=document.getElementById('authMessage');el.textContent=text;el.classList.toggle('auth-error',error)}
+function setAuthMode(mode){hokmAuthMode=mode;document.getElementById('loginTab').classList.toggle('active',mode==='login');document.getElementById('signupTab').classList.toggle('active',mode==='signup');document.getElementById('authTitle').textContent=mode==='login'?'ورود به حُکم':'ساخت حساب حُکم';document.getElementById('authSubmit').textContent=mode==='login'?'ورود به بازی':'ساخت حساب و ورود';document.getElementById('authPassword').autocomplete=mode==='login'?'current-password':'new-password';authMessage('')}
+function normalizedUsername(){return document.getElementById('authUsername').value.trim().toLowerCase()}
+function usernameValid(u){return /^[a-z0-9_]{3,24}$/.test(u)}
+async function initHokmAuth(){
+ const gate=document.getElementById('authGate'), shell=document.getElementById('appShell');
+ if(!window.supabase||HOKM_SUPABASE_URL.includes('YOUR_')||HOKM_SUPABASE_PUBLISHABLE_KEY.includes('YOUR_')){authMessage('برای فعال‌شدن ورود، URL و Publishable Key پروژه را در index.html تنظیم کن.',true);return}
+ const remember = document.getElementById('rememberMe').checked;
+ hokmSupabase=window.supabase.createClient(HOKM_SUPABASE_URL,HOKM_SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:remember?window.localStorage:window.sessionStorage,storageKey:remember?'hokm-auth-remembered':'hokm-auth-session'}});
+ const {data:{session}}=await hokmSupabase.auth.getSession();
+ if(session){await showAuthenticated(session)} else {gate.hidden=false;shell.style.visibility='hidden'}
+ hokmSupabase.auth.onAuthStateChange((_event,session)=>{if(session)showAuthenticated(session);else{gate.hidden=false;shell.style.visibility='hidden'}});
+}
+async function showAuthenticated(session){hokmSession=session;document.getElementById('authGate').hidden=true;document.getElementById('appShell').style.visibility='visible';const u=session.user?.user_metadata?.username||session.user?.email?.split('@')[0]||'بازیکن';document.getElementById('accountAvatar').textContent=u.slice(0,1).toUpperCase();document.getElementById('accountButton').textContent='خروج · '+u;document.getElementById('authUsername').value=u}
+document.getElementById('authForm').addEventListener('submit',async e=>{
+ e.preventDefault(); if(!hokmSupabase){authMessage('ابتدا تنظیمات Supabase را وارد کن.',true);return}
+ const u=normalizedUsername(), pw=document.getElementById('authPassword').value, btn=document.getElementById('authSubmit');
+ if(!usernameValid(u)){authMessage('نام کاربری باید ۳ تا ۲۴ نویسه و فقط شامل حروف انگلیسی، عدد یا زیرخط باشد.',true);return}
+ if(pw.length<8){authMessage('رمز عبور باید حداقل ۸ نویسه باشد.',true);return}
+ btn.disabled=true;authMessage(hokmAuthMode==='signup'?'در حال ساخت حساب امن…':'در حال ورود…');
+ try{
+  // Edge Function handles username mapping and privileged account creation. No secret key is exposed here.
+  const {data,error}=await hokmSupabase.functions.invoke('username-auth',{body:{action:hokmAuthMode,username:u,password:pw}});
+  if(error) throw error;
+  if(data?.error) throw new Error(data.error);
+  if(!data?.access_token||!data?.refresh_token) throw new Error('پاسخ ورود کامل نبود؛ تنظیمات تابع را بررسی کن.');
+  const {data:sessionData,error:setErr}=await hokmSupabase.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token});
+  if(setErr)throw setErr;
+  document.getElementById('authPassword').value='';authMessage('ورود موفق بود.');await showAuthenticated(sessionData.session);
+ }catch(err){let msg=err?.message||'خطای نامشخص';if(/already|exists|registered/i.test(msg))msg='این نام کاربری قبلاً گرفته شده است.';else if(/invalid login|credentials|password/i.test(msg))msg='نام کاربری یا رمز عبور درست نیست.';authMessage(msg,true)}finally{btn.disabled=false}
+});
+async function hokmLogout(){if(!hokmSupabase)return;await hokmSupabase.auth.signOut();document.getElementById('authPassword').value='';authMessage('از حساب خارج شدی.');}
+window.addEventListener('DOMContentLoaded',initHokmAuth);
+</script>
+
 <script>
 let modalMode='create',currentCode='H7K2Q',currentName='شما',selectedSuit='♠',scoreA=0,scoreB=0,toastTimer;
 const SUITS=['♠','♥','♣','♦'],RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
